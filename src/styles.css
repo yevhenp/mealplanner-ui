@@ -1,0 +1,14 @@
+.ng-invalid:not(form).ng-touched:not(form) {
+    border-left: 5px solid #a94442; /* red */
+}
+
+div.error {
+    background-color: #f57272;
+    color: #9e0303;
+    font-family: Verdana, Geneva, sans-serif;
+    padding: 20px;
+    margin-bottom: 10px;
+    width: 25%;
+    border-radius: 3px;
+}
+

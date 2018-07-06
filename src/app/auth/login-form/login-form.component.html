@@ -1,0 +1,30 @@
+<div class="row">
+    <div class="col-xs-12 col-lg-6">
+
+        <h1>Login</h1>
+        <form #f="ngForm" (ngSubmit)="onSubmit()">
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" class="form-control"
+                       required email [(ngModel)]="user.email" name="email" #emailField="ngModel">
+
+                <div class="alert alert-danger"
+                     [hidden]="emailField.valid || emailField.untouched">Email is required!</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label> <br>
+                <input type="password" id="password" class="form-control"
+                       required [(ngModel)]="user.password" name="password" #passField="ngModel">
+
+                <div class="alert alert-danger"
+                     [hidden]="passField.valid || passField.untouched">Password is required!</div>
+            </div>
+
+            <button type="submit" class="btn btn-success" [disabled]="!f.form.valid">Login</button>
+        </form>
+
+    </div>
+</div>
+
