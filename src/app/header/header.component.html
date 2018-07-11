@@ -1,12 +1,20 @@
 <div class="navbar navbar-default">
     <div class="container-fluid">
 
-            <a href="#" class="navbar-brand">Meal Planner</a>
+        <a class="navbar-brand" routerLink="/">Meal Planner</a>
 
+        <ul class="nav navbar-nav">
+            <ng-template [ngIf]="authService.isAuthenticated()">
+                <li routerLinkActive="active"><a routerLink="/members">Members</a></li>
+            </ng-template>
+        </ul>
 
         <ul class="nav navbar-nav navbar-right">
-            <li routerLinkActive="active"><a routerLink="/login">Login</a></li>
-            <li routerLinkActive="active"><a routerLink="/register">Register</a></li>
+            <ng-template [ngIf]="!authService.isAuthenticated()">
+                <li routerLinkActive="active"><a routerLink="/login">Login</a></li>
+                <li routerLinkActive="active"><a routerLink="/register">Register</a></li>
+            </ng-template>
+            <li><a (click)="onLogout()" *ngIf="authService.isAuthenticated()">Logout</a></li>
         </ul>
     </div>
 </div>

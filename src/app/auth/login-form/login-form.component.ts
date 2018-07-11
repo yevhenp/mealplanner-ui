@@ -1,21 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { User } from '../../user';
+import { Component } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { AuthService } from '../auth.service';
 
 @Component({
     selector: 'app-login-form',
     templateUrl: './login-form.component.html',
     styleUrls: ['./login-form.component.css']
 })
-export class LoginFormComponent implements OnInit {
+export class LoginFormComponent {
 
-    constructor() {
+    constructor(public authService: AuthService) {
     }
 
-    ngOnInit() {
-    }
-
-    onSubmit() {
-
+    onLogin(form: NgForm) {
+        this.authService.loginUser(form.value.email, form.value.password);
     }
 
 }
