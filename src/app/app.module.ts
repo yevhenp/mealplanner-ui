@@ -11,6 +11,7 @@ import { AuthService } from './auth/auth.service';
 import { AccountService } from './shared/account.service';
 import { HomeComponent } from './home/home.component';
 import { MembersModule } from './members/members.module';
+import { StoresModule } from './stores/stores.module';
 
 @NgModule({
     declarations: [
@@ -24,7 +25,8 @@ import { MembersModule } from './members/members.module';
         AppRoutingModule,
         FormsModule,
         AuthModule,
-        MembersModule
+        MembersModule,
+        StoresModule
     ],
     providers: [AuthService, AccountService],
     bootstrap: [AppComponent]

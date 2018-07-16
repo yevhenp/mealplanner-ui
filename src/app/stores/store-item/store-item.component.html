@@ -1,12 +1,12 @@
 <li class="list-group-item">
-    <h4 class="list-group-item-heading" *ngIf="!editMode">{{member.name}}</h4>
+    <h4 class="list-group-item-heading" *ngIf="!editMode">{{store.name}}</h4>
     <form *ngIf="editMode" class="form-inline" #f="ngForm" (ngSubmit)="onEdit(f)" style="margin-bottom: 4px;">
-        <input type="text" [(ngModel)]="member.name" class="form-control" name="name">
+        <input type="text" [(ngModel)]="store.name" class="form-control" name="name">
         <button type="submit" class="btn btn-success">Update</button>
     </form>
 
-    <p class="list-group-item-text">{{member.id}}</p>
-    <p class="list-group-item-info">{{member.status}}</p>
+    <p class="list-group-item-text">{{store.id}}</p>
+    <p class="list-group-item-info">{{store.status}}</p>
 
     <div class="btn-toolbar">
         <button class="btn btn-default" type="button" (click)="editMode = true" *ngIf="!editMode">Edit</button>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { map, concatMap } from 'rxjs/operators';
+import { concatMap, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -11,6 +11,7 @@ export class AuthService {
 
     // FOR DEBUGGING PURPOSES ONLY
     // serverUrl = 'http://localhost:8080';
+
     headers = new HttpHeaders().append('Content-Type', 'application/json');
     private authToken = '';
     accountId = '';

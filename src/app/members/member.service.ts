@@ -81,7 +81,7 @@ export class MemberService {
             .append('If-Unmodified-Since', member.lastRetrieved.toUTCString());
         this.http.patch(this.membersUrl + '/' + member.id, {'name': newName}, {headers: headers})
             .subscribe(() => {
-                this.editMemberInList(index, newName);
+                this.editMemberInList(index, newName, new Date());
                 console.log('Updated name to: ' + newName);
             });
     }
@@ -96,8 +96,9 @@ export class MemberService {
         this.listUpdated.next(this.members.slice());
     }
 
-    private editMemberInList(index: number, newName: string) {
+    private editMemberInList(index: number, newName: string, timeChanged: Date) {
         this.members[index].name = newName;
+        this.members[index].lastRetrieved = timeChanged;
         this.listUpdated.next(this.members.slice());
     }
 }

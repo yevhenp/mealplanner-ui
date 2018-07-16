@@ -1,0 +1,24 @@
+<div class="row">
+    <div class="col-xs-12 col-lg-6">
+        <form #f="ngForm" (ngSubmit)="onAddStore(f)">
+
+            <div class="form-group">
+                <label for="name">Store Name</label>
+                <input type="text" id="name" class="form-control" ngModel name="name" #nameField="ngModel" required>
+            </div>
+
+            <div class="btn-toolbar">
+                <button class="btn btn-success" type="submit" [disabled]="!nameField.valid">Add Store</button>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<hr>
+
+<div class="row">
+    <div class="col-xs-12 col-lg-6">
+        <app-store-item *ngFor="let store of stores; let i = index" [listItem]="store" [index]="i"></app-store-item>
+    </div>
+</div>
