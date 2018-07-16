@@ -1,0 +1,50 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Welcome to the Meal Planner!</h1>
+        <i>
+            <ng-template [ngIf]="authService.isAuthenticated()">
+                <h4>You are authenticated!</h4>
+            </ng-template>
+            <ng-template [ngIf]="!authService.isAuthenticated()">
+                <h4>You are NOT authenticated!</h4>
+            </ng-template>
+        </i>
+    </div>
+</div>
+
+<div class="row" *ngIf="!authService.isAuthenticated()">
+    <div class="col-lg-12">
+        <p>
+            Maecenas elementum aliquet aliquet. Sed efficitur dui lectus. In feugiat efficitur neque ut bibendum. Nullam
+            laoreet diam eu lorem ullamcorper malesuada. Donec eu quam elit. Phasellus quis massa feugiat, interdum
+            mauris at, fermentum tellus. Vivamus vulputate, nulla in lacinia ullamcorper, dolor risus venenatis turpis,
+            a congue orci magna sed sem. Sed convallis sed massa nec posuere. Vestibulum et felis eget mauris sodales
+            malesuada eu quids dui.
+        </p>
+        <p>
+            Nunc interdum at ex a laoreet. Praesent convallis ac purus sit amet auctor. Curabitur eu ullamcorper nulla.
+            Maecenas imperdiet posuere enim, et tempor risus. Etiam sit amet nisi tristique, commodo arcu ac,
+            consectetur nulla. Integer non mi quis sem efficitur accumsan vitae non elit. Nam fringilla quam ut leo
+            gravida, ac maximus neque dignissim. Integer tempor malesuada congue.
+        </p>
+    </div>
+</div>
+
+<div class="row" *ngIf="authService.isAuthenticated()">
+    <div class="col-lg-12">
+        <p>
+            Меценат элемента бананы бананы. Тем не менее, он становится дуй закончил. Ес производится не пить. Laoreet
+            реле диам ес Lorem ullamcorper malesuada. До футбольного матча. Sed ес любая масса, иногда Mauris, подметая
+            землю. Vivamus vulputate, не существует в Лациния ullamcorper, QUIS Sed Sed venenatis turpis, congue Орси
+            имеет важное значение, но от телевизора. Но масса Curabitur iaculis condimentum витэ. Месячные и газа mauris
+            членов malesuada любого футбола стоит.
+        </p>
+        <p>
+            Теперь иногда выгружают из витэ. Present convallis переменного тока Пурус сидеть Амет auctor. Нет
+            ullamcorper футбол чат. Меценат набор финансирования долгосрочного смеха. Это тоже важно, но грустно,
+            Commodo Aliquam ас Эст еи consectetur Nulla. Это становится accumsan Integer MORBI Nam, моя жизнь не будет
+            они работникам. На самом деле, как лев, чем экологическая беременного и великий человек, ни имущество.
+            Integer malesuada по всей стране.
+        </p>
+    </div>
+</div>

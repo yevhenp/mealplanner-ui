@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
     serverUrl = 'http://mealplanner.axilious.com';
+
+    // FOR DEBUGGING PURPOSES ONLY
     // serverUrl = 'http://localhost:8080';
     headers = new HttpHeaders().append('Content-Type', 'application/json');
     private authToken = '';
