@@ -12,6 +12,7 @@ import { AccountService } from './shared/account.service';
 import { HomeComponent } from './home/home.component';
 import { MembersModule } from './members/members.module';
 import { StoresModule } from './stores/stores.module';
+import { MessageService } from './shared/message.service';
 
 @NgModule({
     declarations: [
@@ -28,7 +29,7 @@ import { StoresModule } from './stores/stores.module';
         MembersModule,
         StoresModule
     ],
-    providers: [AuthService, AccountService],
+    providers: [AuthService, AccountService, MessageService],
     bootstrap: [AppComponent]
 })
 export class AppModule {

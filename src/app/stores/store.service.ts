@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { Store } from './store.model';
 import { map } from 'rxjs/operators';
+import { MessageService } from '../shared/message.service';
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +21,7 @@ export class StoreService {
     // FOR DEBUGGING PURPOSES ONLY
     // storesUrl = 'http://localhost:8080/api/v1/stores';
 
-    constructor(private http: HttpClient, private authService: AuthService) {
+    constructor(private http: HttpClient, private authService: AuthService, private msgService: MessageService) {
     }
 
     private getAuthToken() {
@@ -53,31 +54,43 @@ export class StoreService {
         const headers = this.getAuthToken().append('Content-Type', 'application/json');
         this.http.post(this.storesUrl, {'name': storeName}, {observe: 'response', headers: headers})
             .subscribe((resp) => {
-                const id = resp.headers.get('Location').split('/api/v1/stores/')[1];
-                const store = new Store(storeName, id, 'ACTIVE', new Date());
-                this.addStoreToList(store);
+                    const id = resp.headers.get('Location').split('/api/v1/stores/')[1];
+                    const store = new Store(storeName, id, 'ACTIVE', new Date());
+                    this.addStoreToList(store);
+                    this.msgService.pushStatusCode(resp.status);
 
-                console.log('Created new store...');
-                console.log(store);
-            });
+                    console.log('Created new store...');
+                    console.log(store);
+                },
+                (error) => {
+                    this.msgService.pushStatusCode(error.status);
+                });
     }
 
     deleteStore(storeId: string, index: number) {
-        this.http.delete(this.storesUrl + '/' + storeId, {headers: this.getAuthToken()})
-            .subscribe(() => {
-                this.deleteStoreFromList(index);
-                console.log('Successfully deleted store!');
-            });
+        this.http.delete(this.storesUrl + '/' + storeId, {observe: 'response', headers: this.getAuthToken()})
+            .subscribe((resp) => {
+                    this.deleteStoreFromList(index);
+                    this.msgService.pushStatusCode(resp.status);
+                    console.log('Successfully deleted store!');
+                },
+                (error) => {
+                    this.msgService.pushStatusCode(error.status);
+                });
     }
 
     editStore(store: Store, newName: string, index: number) {
         const headers = this.getAuthToken().append('Content-Type', 'application/merge-patch+json')
             .append('If-Unmodified-Since', store.lastRetrieved.toUTCString());
-        this.http.patch(this.storesUrl + '/' + store.id, {'name': newName}, {headers: headers})
-            .subscribe(() => {
-                this.editStoreInList(index, newName, new Date());
-                console.log('Updated name to: ' + newName);
-            });
+        this.http.patch(this.storesUrl + '/' + store.id, {'name': newName}, {observe: 'response', headers: headers})
+            .subscribe((resp: HttpResponse<any>) => {
+                    this.editStoreInList(index, newName, new Date());
+                    this.msgService.pushStatusCode(resp.status);
+                    console.log('Updated name to: ' + newName);
+                },
+                (error) => {
+                    this.msgService.pushStatusCode(error.status);
+                });
     }
 
     private addStoreToList(store: Store) {
@@ -95,4 +108,6 @@ export class StoreService {
         this.stores[index].lastRetrieved = timeChanged;
         this.listUpdated.next(this.stores.slice());
     }
+
+
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { concatMap, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { MessageService } from '../shared/message.service';
 
 @Injectable({
     providedIn: 'root'
@@ -16,9 +17,8 @@ export class AuthService {
     private authToken = '';
     accountId = '';
     memberId = '';
-    errorText = '';
 
-    constructor(private http: HttpClient, private router: Router) {
+    constructor(private http: HttpClient, private router: Router, private msgService: MessageService) {
     }
 
     registerUser(name: string, email: string, password: string) {
@@ -26,36 +26,37 @@ export class AuthService {
             observe: 'response',
             headers: this.headers
         }).pipe(
-                map((resp: HttpResponse<string>) => {
-                    this.accountId = resp.headers.get('Location').split('/api/v1/accounts/')[1];
-                    return resp.headers.get('X-Auth-Prc');
-                }),
-                concatMap((prc) =>
-                    this.http.put(this.serverUrl + '/api/v1/accounts/password/reset/' + prc,
+            map((resp: HttpResponse<string>) => {
+                this.accountId = resp.headers.get('Location').split('/api/v1/accounts/')[1];
+                return resp.headers.get('X-Auth-Prc');
+            }),
+            concatMap((prc) =>
+                this.http.put(this.serverUrl + '/api/v1/accounts/password/reset/' + prc,
                     {'password': password},
                     {headers: this.headers}
                 )),
-                concatMap(() => this.http.post(this.serverUrl + '/api/v1/session',
-                    {
-                        'email': email,
-                        'password': password,
-                        'rememberMe': false
-                    }, {observe: 'response', headers: this.headers}
-                )),
-                map((resp) => {
-                    return resp.headers.get('X-Auth-Token');
-                }),
-                concatMap((token) => this.http.post(this.serverUrl + '/api/v1/members', {'name': name},
-                    {observe: 'response', headers: this.headers.append('X-Auth-Token', token)}))
-
-            ).subscribe((location) => {
+            concatMap(() => this.http.post(this.serverUrl + '/api/v1/session',
+                {
+                    'email': email,
+                    'password': password,
+                    'rememberMe': false
+                }, {observe: 'response', headers: this.headers}
+            )),
+            map((resp) => {
+                return resp.headers.get('X-Auth-Token');
+            }),
+            concatMap((token) => this.http.post(this.serverUrl + '/api/v1/members', {'name': name},
+                {observe: 'response', headers: this.headers.append('X-Auth-Token', token)}))
+        ).subscribe((location) => {
                 this.memberId = location.headers.get('Location').split('/api/v1/members/')[1];
+                this.msgService.pushStatusCode(200);
                 console.log('Successfully registered!');
                 this.router.navigate(['/login']);
+            },
+            (error) => {
+                this.msgService.pushStatusCode(error.status);
             }
-            );
-        // TODO error handling, including duplicate email registrations
-
+        );
     }
 
     loginUser(email: string, password: string) {
@@ -65,14 +66,15 @@ export class AuthService {
                 'password': password,
                 'rememberMe': false
             }, {observe: 'response', headers: this.headers})
-                .subscribe((resp) => {
+            .subscribe((resp) => {
                     this.authToken = resp.headers.get('X-Auth-Token');
                     this.router.navigate(['/']);
+                    this.msgService.pushStatusCode(resp.status);
                     console.log('Logged in --> ' + resp.headers.get('X-Auth-Token'));
                 },
-                    (error) => {
-                        this.errorText = error.statusText;
-                    });
+                (error) => {
+                    this.msgService.pushStatusCode(error.status);
+                });
     }
 
     logoutUser() {

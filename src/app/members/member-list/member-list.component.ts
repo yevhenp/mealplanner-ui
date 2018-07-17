@@ -3,6 +3,7 @@ import { Member } from '../member.model';
 import { MemberService } from '../member.service';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { MessageService } from '../../shared/message.service';
 
 @Component({
     selector: 'app-members-list',
@@ -11,17 +12,28 @@ import { Subscription } from 'rxjs';
 })
 export class MemberListComponent implements OnInit, OnDestroy {
     members: Member[] = [];
-    sub: Subscription;
+    error = '';
+    listSub: Subscription;
+    errorSub: Subscription;
 
-    constructor(private memberService: MemberService) {
+    constructor(private memberService: MemberService, private msgService: MessageService) {
     }
 
     ngOnInit() {
         this.memberService.fetchMembers();
 
-        this.sub = this.memberService.listUpdated.subscribe(
+        this.listSub = this.memberService.listUpdated.subscribe(
             (members: Member[]) => {
                 this.members = members;
+            }
+        );
+
+        this.errorSub = this.msgService.msg.subscribe(
+            (msg: string) => {
+                this.error = msg;
+                if (this.error !== '') {
+                    console.log('Error code: ' + this.error);
+                }
             }
         );
     }
@@ -31,6 +43,7 @@ export class MemberListComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.sub.unsubscribe();
+        this.listSub.unsubscribe();
+        this.errorSub.unsubscribe();
     }
 }

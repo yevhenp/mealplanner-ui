@@ -16,7 +16,9 @@
 </div>
 
 <hr>
-
+<div class="alert alert-danger" *ngIf="error !== ''">
+    An error has occurred: {{error}}
+</div>
 <div class="row">
     <div class="col-xs-12 col-lg-6">
         <app-store-item *ngFor="let store of stores; let i = index" [listItem]="store" [index]="i"></app-store-item>

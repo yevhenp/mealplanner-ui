@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../auth/auth.service';
 import { map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { MessageService } from '../shared/message.service';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +18,7 @@ export class MemberService {
     // FOR DEBUG PURPOSES ONLY
     // membersUrl = 'http://localhost:8080/api/v1/members';
 
-    constructor(private http: HttpClient, private authService: AuthService) {
+    constructor(private http: HttpClient, private authService: AuthService, private msgService: MessageService) {
     }
 
     private getAuthToken() {
@@ -59,31 +60,43 @@ export class MemberService {
         const headers = this.getAuthToken().append('Content-Type', 'application/json');
         this.http.post(this.membersUrl, {'name': memberName}, {observe: 'response', headers: headers})
             .subscribe((resp) => {
-                const id = resp.headers.get('Location').split('/api/v1/members/')[1];
-                const member = new Member(memberName, id, 'ACTIVE', new Date());
-                this.addMemberToList(member);
+                    const id = resp.headers.get('Location').split('/api/v1/members/')[1];
+                    const member = new Member(memberName, id, 'ACTIVE', new Date());
+                    this.addMemberToList(member);
+                    this.msgService.pushStatusCode(resp.status);
 
-                console.log('Created new member...');
-                console.log(member);
-            });
+                    console.log('Created new member...');
+                    console.log(member);
+                },
+                (error) => {
+                    this.msgService.pushStatusCode(error.status);
+                });
     }
 
     deleteMember(memberId: string, index: number) {
-        this.http.delete(this.membersUrl + '/' + memberId, {headers: this.getAuthToken()})
-            .subscribe(() => {
-                this.deleteMemberFromList(index);
-                console.log('Successfully deleted member!');
-            });
+        this.http.delete(this.membersUrl + '/' + memberId, {observe: 'response', headers: this.getAuthToken()})
+            .subscribe((resp) => {
+                    this.deleteMemberFromList(index);
+                    this.msgService.pushStatusCode(resp.status);
+                    console.log('Successfully deleted member!');
+                },
+                (error) => {
+                    this.msgService.pushStatusCode(error.status);
+                });
     }
 
     editMember(member: Member, newName: string, index: number) {
         const headers = this.getAuthToken().append('Content-Type', 'application/merge-patch+json')
             .append('If-Unmodified-Since', member.lastRetrieved.toUTCString());
-        this.http.patch(this.membersUrl + '/' + member.id, {'name': newName}, {headers: headers})
-            .subscribe(() => {
-                this.editMemberInList(index, newName, new Date());
-                console.log('Updated name to: ' + newName);
-            });
+        this.http.patch(this.membersUrl + '/' + member.id, {'name': newName}, {observe: 'response', headers: headers})
+            .subscribe((resp) => {
+                    this.editMemberInList(index, newName, new Date());
+                    this.msgService.pushStatusCode(resp.status);
+                    console.log('Updated name to: ' + newName);
+                },
+                (error) => {
+                    this.msgService.pushStatusCode(error.status);
+                });
     }
 
     private addMemberToList(mem: Member) {

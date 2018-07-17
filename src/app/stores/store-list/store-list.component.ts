@@ -3,6 +3,7 @@ import { Store } from '../store.model';
 import { NgForm } from '@angular/forms';
 import { StoreService } from '../store.service';
 import { Subscription } from 'rxjs';
+import { MessageService } from '../../shared/message.service';
 
 @Component({
     selector: 'app-store-list',
@@ -11,18 +12,28 @@ import { Subscription } from 'rxjs';
 })
 export class StoreListComponent implements OnInit, OnDestroy {
     stores: Store[] = [];
-    sub: Subscription;
+    error = '';
+    listSub: Subscription;
+    errorSub: Subscription;
 
-    constructor(private storeService: StoreService) {
+    constructor(private storeService: StoreService, private msgService: MessageService) {
     }
 
     ngOnInit() {
         this.storeService.fetchStores();
 
-        this.sub = this.storeService.listUpdated.subscribe(
+        this.listSub = this.storeService.listUpdated.subscribe(
             (stores: Store[]) => {
                 this.stores = stores;
             });
+        this.errorSub = this.msgService.msg.subscribe(
+            (msg: string) => {
+                this.error = msg;
+                if (this.error !== '') {
+                    console.log('Error code: ' + this.error);
+                }
+            }
+        );
     }
 
     onAddStore(form: NgForm) {
@@ -30,6 +41,7 @@ export class StoreListComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.sub.unsubscribe();
+        this.listSub.unsubscribe();
+        this.errorSub.unsubscribe();
     }
 }
