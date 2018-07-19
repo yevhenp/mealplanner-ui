@@ -1,0 +1,30 @@
+<div class="row">
+    <div class="col-xs-12 col-lg-6">
+        <form #f="ngForm" (ngSubmit)="onAddMember(f)">
+
+            <div class="form-group">
+                <label for="name">Member Name</label>
+                <input type="text" id="name" class="form-control" ngModel name="name" #nameField="ngModel" required>
+            </div>
+
+            <div class="btn-toolbar">
+                <button class="btn btn-success" type="submit" [disabled]="!nameField.valid">Add Member</button>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<hr>
+
+<div class="alert alert-danger" *ngIf="error !== ''">
+    An error has occurred: {{error}}
+</div>
+<div class="row">
+    <div class="col-xs-12 col-lg-5">
+        <app-member-item *ngFor="let member of members; let i = index" [listItem]="member" [index]="i"></app-member-item>
+    </div>
+    <div class="col-lg-7">
+        <router-outlet></router-outlet>
+    </div>
+</div>
