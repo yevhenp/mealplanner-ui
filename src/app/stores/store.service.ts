@@ -75,6 +75,7 @@ export class StoreService {
                     console.log('Successfully deleted store!');
                 },
                 (error) => {
+                console.log(error);
                     this.msgService.pushStatusCode(error.status);
                 });
     }
