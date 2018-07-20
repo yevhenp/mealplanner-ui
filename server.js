@@ -21,7 +21,7 @@ const path = require('path');
 const port = process.env.PORT || 8000;
 const server = require('http').Server(app);
 
-app.use(express.static(__dirname, 'dist/meal-planner', {index: false}));
+app.use(express.static(__dirname, 'dist/meal-planner'));
 
 
 server.listen(port, function() {
@@ -31,9 +31,9 @@ server.listen(port, function() {
 // PathLocationStrategy
 
 app.get('', function(req, res) {
-    res.sendFile(path.join(__dirname, 'src', 'index.html'));
+    res.sendFile(path.join(__dirname + '/dist/meal-planner/index.html'));
 });
 
 app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname, 'src', 'index.html'));
+    res.sendFile(path.join(__dirname + '/dist/meal-planner/index.html'));
 });
