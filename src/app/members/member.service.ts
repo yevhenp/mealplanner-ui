@@ -63,13 +63,17 @@ export class MemberService {
                     const id = resp.headers.get('Location').split('/api/v1/members/')[1];
                     const member = new Member(memberName, id, 'ACTIVE', new Date());
                     this.addMemberToList(member);
-                    this.msgService.pushStatusCode(resp.status);
+                    this.msgService.pushMessage(resp);
 
                     console.log('Created new member...');
                     console.log(member);
                 },
                 (error) => {
-                    this.msgService.pushStatusCode(error.status);
+                    console.log(error);
+                    console.log('why doesn\'t this create a fucking div?');
+                    console.log('error status is ' + error.status);
+                    console.log('error message is ' + error['error']['_embedded']['notifications'][0].message);
+                    this.msgService.pushMessage(error);
                 });
     }
 
@@ -77,11 +81,11 @@ export class MemberService {
         this.http.delete(this.membersUrl + '/' + memberId, {observe: 'response', headers: this.getAuthToken()})
             .subscribe((resp) => {
                     this.deleteMemberFromList(index);
-                    this.msgService.pushStatusCode(resp.status);
+                    this.msgService.pushMessage(resp);
                     console.log('Successfully deleted member!');
                 },
                 (error) => {
-                    this.msgService.pushStatusCode(error.status);
+                    this.msgService.pushMessage(error);
                 });
     }
 
@@ -91,11 +95,11 @@ export class MemberService {
         this.http.patch(this.membersUrl + '/' + member.id, {'name': newName}, {observe: 'response', headers: headers})
             .subscribe((resp) => {
                     this.editMemberInList(index, newName, new Date());
-                    this.msgService.pushStatusCode(resp.status);
+                    this.msgService.pushMessage(resp);
                     console.log('Updated name to: ' + newName);
                 },
                 (error) => {
-                    this.msgService.pushStatusCode(error.status);
+                    this.msgService.pushMessage(error);
                 });
     }
 

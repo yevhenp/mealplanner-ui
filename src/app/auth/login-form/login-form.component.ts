@@ -21,7 +21,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
             (msg: string) => {
                 this.error = msg;
                 if (this.error !== '') {
-                    console.log('Error code: ' + this.error);
+                    console.log(this.error);
                 }
             }
         );

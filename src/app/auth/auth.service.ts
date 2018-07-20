@@ -49,12 +49,11 @@ export class AuthService {
                 {observe: 'response', headers: this.headers.append('X-Auth-Token', token)}))
         ).subscribe((location) => {
                 this.memberId = location.headers.get('Location').split('/api/v1/members/')[1];
-                this.msgService.pushStatusCode(200);
                 console.log('Successfully registered!');
                 this.router.navigate(['/login']);
             },
             (error) => {
-                this.msgService.pushStatusCode(error.status);
+                this.msgService.pushMessage(error);
             }
         );
     }
@@ -69,11 +68,11 @@ export class AuthService {
             .subscribe((resp) => {
                     this.authToken = resp.headers.get('X-Auth-Token');
                     this.router.navigate(['/']);
-                    this.msgService.pushStatusCode(resp.status);
+                    this.msgService.pushMessage(resp);
                     console.log('Logged in --> ' + resp.headers.get('X-Auth-Token'));
                 },
                 (error) => {
-                    this.msgService.pushStatusCode(error.status);
+                    this.msgService.pushMessage(error);
                 });
     }
 

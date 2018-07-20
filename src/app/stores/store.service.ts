@@ -57,13 +57,13 @@ export class StoreService {
                     const id = resp.headers.get('Location').split('/api/v1/stores/')[1];
                     const store = new Store(storeName, id, 'ACTIVE', new Date());
                     this.addStoreToList(store);
-                    this.msgService.pushStatusCode(resp.status);
+                    this.msgService.pushMessage(resp);
 
                     console.log('Created new store...');
                     console.log(store);
                 },
                 (error) => {
-                    this.msgService.pushStatusCode(error.status);
+                    this.msgService.pushMessage(error);
                 });
     }
 
@@ -71,12 +71,12 @@ export class StoreService {
         this.http.delete(this.storesUrl + '/' + storeId, {observe: 'response', headers: this.getAuthToken()})
             .subscribe((resp) => {
                     this.deleteStoreFromList(index);
-                    this.msgService.pushStatusCode(resp.status);
+                    this.msgService.pushMessage(resp);
                     console.log('Successfully deleted store!');
                 },
                 (error) => {
                 console.log(error);
-                    this.msgService.pushStatusCode(error.status);
+                    this.msgService.pushMessage(error);
                 });
     }
 
@@ -86,11 +86,11 @@ export class StoreService {
         this.http.patch(this.storesUrl + '/' + store.id, {'name': newName}, {observe: 'response', headers: headers})
             .subscribe((resp: HttpResponse<any>) => {
                     this.editStoreInList(index, newName, new Date());
-                    this.msgService.pushStatusCode(resp.status);
+                    this.msgService.pushMessage(resp);
                     console.log('Updated name to: ' + newName);
                 },
                 (error) => {
-                    this.msgService.pushStatusCode(error.status);
+                    this.msgService.pushMessage(error);
                 });
     }
 

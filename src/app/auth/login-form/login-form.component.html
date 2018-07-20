@@ -3,7 +3,7 @@
 
         <h1>Login</h1>
         <div class="alert alert-danger" *ngIf="error !== ''">
-            An error has occurred: {{ error }}
+            {{ error }}
         </div>
 
         <form #f="ngForm" (ngSubmit)="onLogin(f)">

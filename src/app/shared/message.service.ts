@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
@@ -11,34 +12,50 @@ export class MessageService {
     constructor() {
     }
 
-    pushStatusCode(status: number) {
-        if (Math.floor(status / 100) === 2) {
+    pushMessage(error: HttpResponse<any>) {
+        if (Math.floor(error.status / 100) === 2) {
             this.msg.next('');
         } else {
-            switch (status) {
+            switch (error.status) {
                 case 400:
-                    this.msg.next('Bad request');
+                    // Bad request
+                    this.msg.next(error['error']['_embedded']['notifications'][0].message);
                     break;
                 case 401:
-                    this.msg.next('Unauthorized');
+                    // Unauthorized
+                    this.msg.next(error['error']['_embedded']['notifications'][0].message);
                     break;
                 case 402:
-                    this.msg.next('Payment required');
+                    // Payment required
+                    this.msg.next(error['error']['_embedded']['notifications'][0].message);
                     break;
                 case 403:
-                    this.msg.next('Forbidden');
+                    // Forbidden
+                    this.msg.next(error['error']['_embedded']['notifications'][0].message);
                     break;
                 case 404:
-                    this.msg.next('Not found');
+                    // Not found
+                    this.msg.next('This user was not found');
                     break;
                 case 409:
-                    this.msg.next('Conflict');
+                    // Conflict
+                    this.msg.next('An account with this email has already been registered');
+                    break;
+                case 412:
+                    // Precondition failed
+                    this.msg.next('Another member just modified this resource -- please reload the page and try again');
+                    break;
+                case 428:
+                    // Precondition required
+                    this.msg.next('E-tag / If-Unmodified-Since header is missing (tell the devs)!!!');
                     break;
                 case 500:
-                    this.msg.next('Internal server error');
+                    // Internal server error
+                    this.msg.next(error['error']['_embedded']['notifications'][0].message);
                     break;
                 case 501:
-                    this.msg.next('Not implemented');
+                    // Not implemented
+                    this.msg.next(error['error']['_embedded']['notifications'][0].message);
                     break;
             }
         }

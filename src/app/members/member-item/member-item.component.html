@@ -1,7 +1,7 @@
 <li class="list-group-item">
     <h4 class="list-group-item-heading" *ngIf="!editMode">{{member.name}}</h4>
     <form *ngIf="editMode" class="form-inline" #f="ngForm" (ngSubmit)="onEdit(f)" style="margin-bottom: 4px;">
-        <input type="text" [(ngModel)]="member.name" class="form-control" name="name">
+        <input type="text" [ngModel]="member.name" class="form-control" name="name">
         <button type="submit" class="btn btn-success">Update</button>
     </form>
 
