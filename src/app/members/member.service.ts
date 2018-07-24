@@ -70,8 +70,6 @@ export class MemberService {
                 },
                 (error) => {
                     console.log(error);
-                    console.log('why doesn\'t this create a fucking div?');
-                    console.log('error status is ' + error.status);
                     console.log('error message is ' + error['error']['_embedded']['notifications'][0].message);
                     this.msgService.pushMessage(error);
                 });

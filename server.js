@@ -10,8 +10,8 @@ app.use(express.static(path.join(__dirname, '/dist/meal-planner')));
 
 // For all GET requests, send back index.html
 // so that PathLocationStrategy can be used
-app.get('*', (req,res) => {
-    res.sendFile(path.join(__dirname, '/dist/meal-planner/index.html'));
+app.get('/', (req,res) => {
+    res.send(path.join(__dirname, '/dist/meal-planner/index.html'));
 });
 
 const port = process.env.PORT || 8080;
@@ -20,26 +20,3 @@ app.set('port', port);
 // Start the app by listening on the default Heroku port
 const server = http.createServer(app);
 server.listen(port, () => console.log('Running on port ' + port));
-
-// const express = require('express');
-// const app = express();
-// const path = require('path');
-// const port = process.env.PORT || 8000;
-// const server = require('http').Server(app);
-//
-// app.use(express.static(__dirname, 'dist/meal-planner'));
-//
-//
-// server.listen(port, function() {
-//     console.log("App running on port " + port);
-// })
-//
-// // PathLocationStrategy
-//
-// app.get('', function(req, res) {
-//     res.sendFile(path.join(__dirname + '/dist/meal-planner/index.html'));
-// });
-//
-// app.get('/', function(req, res) {
-//     res.sendFile(path.join(__dirname + '/dist/meal-planner/index.html'));
-// });
