@@ -11,7 +11,7 @@ app.use(express.static(path.join(__dirname, '/dist/meal-planner')));
 // For all GET requests, send back index.html
 // so that PathLocationStrategy can be used
 app.get('/', (req,res) => {
-    res.send(path.join(__dirname, '/dist/meal-planner/index.html'));
+    res.sendFile(path.join(__dirname, '/dist/meal-planner/index.html'));
 });
 
 const port = process.env.PORT || 8080;
