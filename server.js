@@ -1,19 +1,25 @@
 //Install express server
 const express = require('express');
+const http = require('http');
 const path = require('path');
+
 const app = express();
 
 // Serve only the static files form the dist directory
-app.use(express.static(__dirname + '/dist/meal-planner'));
+app.use(express.static(path.join(__dirname, '/dist/meal-planner')));
 
 // For all GET requests, send back index.html
 // so that PathLocationStrategy can be used
-app.get('/*', function(req,res) {
-    res.sendFile(path.join(__dirname + '/dist/meal-planner/index.html'));
+app.get('*', (req,res) => {
+    res.sendFile(path.join(__dirname, '/dist/meal-planner/index.html'));
 });
 
+const port = process.env.PORT || 8080;
+app.set('port', port);
+
 // Start the app by listening on the default Heroku port
-app.listen(process.env.PORT || 8080);
+const server = http.createServer(app);
+server.listen(port, () => console.log('Running on port ' + port));
 
 // const express = require('express');
 // const app = express();
