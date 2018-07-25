@@ -3,8 +3,6 @@ const express = require('express');
 const http = require('http');
 const path = require('path');
 
-console.log('The path is ' + path);
-console.log('directory is ' + __dirname);
 const app = express();
 
 // Serve only the static files form the dist directory
@@ -12,9 +10,7 @@ app.use(express.static(path.join(__dirname, '/dist/meal-planner')));
 
 // For all GET requests, send back index.html
 // so that PathLocationStrategy can be used
-app.get('/*', (req,res) => {
-    console.log('The path is ' + path);
-    console.log('directory is ' + __dirname);
+app.get('*', (req,res) => {
     res.send(path.join(__dirname, '/dist/meal-planner/index.html'));
 });
 
