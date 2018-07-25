@@ -8,15 +8,13 @@ const app = express();
 // Serve only the static files form the dist directory
 app.use(express.static(path.join(__dirname, '/dist/meal-planner')));
 
-// For all GET requests, send back index.html
-// so that PathLocationStrategy can be used
+// For all GET requests, send back index.html so that PathLocationStrategy can be used
 app.get('*', (req,res) => {
-    res.send(path.join(__dirname, '/dist/meal-planner/index.html'));
+    res.sendFile(path.join(__dirname, '/dist/meal-planner/index.html'));
 });
 
+// Start the app by listening on the default Heroku port
 const port = process.env.PORT || 8080;
 app.set('port', port);
-
-// Start the app by listening on the default Heroku port
 const server = http.createServer(app);
 server.listen(port, () => console.log('Running on port ' + port));
