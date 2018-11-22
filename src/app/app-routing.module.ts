@@ -8,6 +8,7 @@ import { MemberListComponent } from './members/member-list/member-list.component
 import { AuthGuard } from './auth/auth-guard.service';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { StoreListComponent } from './stores/store-list/store-list.component';
+import { UpdatePassFormComponent } from './auth/update-pass-form/update-pass-form.component';
 
 const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -18,7 +19,8 @@ const routes: Routes = [
             {path: ':id', component: MemberDetailComponent}
         ]
     },
-    {path: 'stores', component: StoreListComponent, canActivate: [AuthGuard]}
+    {path: 'stores', component: StoreListComponent, canActivate: [AuthGuard]},
+    {path: 'accounts/password/reset/:prc', component: UpdatePassFormComponent}
 ];
 
 @NgModule({

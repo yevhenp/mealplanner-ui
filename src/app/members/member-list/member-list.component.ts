@@ -4,6 +4,7 @@ import { MemberService } from '../member.service';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { MessageService } from '../../shared/message.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
     selector: 'app-members-list',
@@ -16,7 +17,7 @@ export class MemberListComponent implements OnInit, OnDestroy {
     listSub: Subscription;
     errorSub: Subscription;
 
-    constructor(private memberService: MemberService, private msgService: MessageService) {
+    constructor(private memberService: MemberService, private msgService: MessageService, private authService: AuthService) {
     }
 
     ngOnInit() {

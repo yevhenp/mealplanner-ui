@@ -4,6 +4,7 @@ import { NgForm } from '@angular/forms';
 import { StoreService } from '../store.service';
 import { Subscription } from 'rxjs';
 import { MessageService } from '../../shared/message.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
     selector: 'app-store-list',
@@ -16,7 +17,7 @@ export class StoreListComponent implements OnInit, OnDestroy {
     listSub: Subscription;
     errorSub: Subscription;
 
-    constructor(private storeService: StoreService, private msgService: MessageService) {
+    constructor(private storeService: StoreService, private msgService: MessageService, private authService: AuthService) {
     }
 
     ngOnInit() {

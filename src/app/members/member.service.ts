@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Member } from './member.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../auth/auth.service';
-import { map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { MessageService } from '../shared/message.service';
+import { ApiService } from '../shared/api.service';
 
 @Injectable({
     providedIn: 'root'
@@ -13,20 +13,16 @@ export class MemberService {
     private members: Member[] = [];
     listUpdated = new Subject<Member[]>();
 
-    membersUrl = 'http://mealplanner.axilious.com/api/v1/members';
+    membersUrl = 'http://mealplanner.dev.axilious.com/api/v1/members';
 
     // FOR DEBUG PURPOSES ONLY
     // membersUrl = 'http://localhost:8080/api/v1/members';
 
-    constructor(private http: HttpClient, private authService: AuthService, private msgService: MessageService) {
+    constructor(private http: HttpClient, private authService: AuthService, private msgService: MessageService, private api: ApiService) {
     }
 
     private getAuthToken() {
-        return new HttpHeaders().set('X-Auth-Token', this.authService.getToken());
-    }
-
-    getMembers() {
-        return this.members.slice();
+        return new HttpHeaders().set('X-MPPA-Auth-Token', this.authService.getToken());
     }
 
     getMemberByIndex(index: number) {
@@ -35,12 +31,8 @@ export class MemberService {
 
     fetchMembers() {
         this.members = [];
-        this.http.get(this.membersUrl, {headers: this.getAuthToken()})
-            .pipe(map((resp) => {
 
-                // Returning actual array of members (JSON objects)
-                return resp['_embedded']['members'];
-            }))
+        this.api.fetch('members')
             .subscribe((members) => {
                 console.log('Fetched members...');
                 console.log(members);
@@ -57,8 +49,9 @@ export class MemberService {
     }
 
     addMember(memberName: string) {
-        const headers = this.getAuthToken().append('Content-Type', 'application/json');
-        this.http.post(this.membersUrl, {'name': memberName}, {observe: 'response', headers: headers})
+        const reqBody = {'name': memberName};
+
+        this.api.add('members', reqBody)
             .subscribe((resp) => {
                     const id = resp.headers.get('Location').split('/api/v1/members/')[1];
                     const member = new Member(memberName, id, 'ACTIVE', new Date());
@@ -70,13 +63,12 @@ export class MemberService {
                 },
                 (error) => {
                     console.log(error);
-                    console.log('error message is ' + error['error']['_embedded']['notifications'][0].message);
                     this.msgService.pushMessage(error);
                 });
     }
 
     deleteMember(memberId: string, index: number) {
-        this.http.delete(this.membersUrl + '/' + memberId, {observe: 'response', headers: this.getAuthToken()})
+        this.api.delete('members', memberId)
             .subscribe((resp) => {
                     this.deleteMemberFromList(index);
                     this.msgService.pushMessage(resp);
@@ -88,9 +80,9 @@ export class MemberService {
     }
 
     editMember(member: Member, newName: string, index: number) {
-        const headers = this.getAuthToken().append('Content-Type', 'application/merge-patch+json')
-            .append('If-Unmodified-Since', member.lastRetrieved.toUTCString());
-        this.http.patch(this.membersUrl + '/' + member.id, {'name': newName}, {observe: 'response', headers: headers})
+        const reqBody = {'name': newName, 'status': 'ACTIVE'};
+
+        this.api.edit('members', member, reqBody)
             .subscribe((resp) => {
                     this.editMemberInList(index, newName, new Date());
                     this.msgService.pushMessage(resp);

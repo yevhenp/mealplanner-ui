@@ -1,0 +1,23 @@
+<div class="row">
+    <div class="col-xs-12 col-lg-6">
+
+        <h1>Update Account Password</h1>
+        <div class="alert alert-danger" *ngIf="error !== ''">
+            {{ error }}
+        </div>
+
+        <form #f="ngForm" (ngSubmit)="onUpdate(f)">
+            <div class="form-group">
+                <label for="password">Password</label> <br>
+                <input type="password" id="password" class="form-control" required name="password" ngModel #passField="ngModel">
+
+                <div class="alert alert-danger"
+                     [hidden]="passField.valid || passField.untouched">Password is required!
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success" [disabled]="!f.form.valid">Update</button>
+        </form>
+    </div>
+</div>
+
+

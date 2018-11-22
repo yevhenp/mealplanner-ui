@@ -26,6 +26,13 @@
                      [hidden]="passField.valid || passField.untouched">Password is required!</div>
             </div>
 
+            <div class="form-group">
+                <label class="control-label">
+                    <input type="checkbox" id="remember" name="remember" ngModel #rememberField="ngModel">
+                     Remember Me
+                </label>
+            </div>
+
             <button type="submit" class="btn btn-success" [disabled]="!f.form.valid">Login</button>
         </form>
     </div>
