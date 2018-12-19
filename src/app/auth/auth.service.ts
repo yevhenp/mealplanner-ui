@@ -16,7 +16,6 @@ export class AuthService {
 
     headers = new HttpHeaders().append('Content-Type', 'application/json');
     private authToken = '';
-    accountId = '';
     memberId = '';
 
     constructor(private http: HttpClient, private router: Router, private msgService: MessageService, private cookie: CookieService) {
@@ -33,12 +32,7 @@ export class AuthService {
                 headers: this.headers
             });
         }))
-        .subscribe((resp) => {
-                console.log(resp);
-            }, (resp) => {
-                console.log(resp);
-            }
-        );
+        .subscribe();
     //     .pipe(
     //     map((resp: HttpResponse<string>) => {
     //         this.accountId = resp.headers.get('Location').split('/api/v1/accounts/')[1];
@@ -115,37 +109,12 @@ export class AuthService {
     }
 
     isAuthenticated() {
+        // console.log(this.authToken);
+        // console.log(this.cookie.get('mppa-remember-me'));
         return (this.authToken !== '') || this.cookie.get('mppa-remember-me') !== '';
     }
 
     getToken() {
         return this.authToken;
     }
-
-
-    // updatePassword(password: string) {
-    //     console.log('updatePassword() PRC --> ' + this.user.prc);
-    //     return this.http.put(this.serverUrl + '/api/v1/accounts/password/reset/' + this.user.prc,
-    //         {'password': password},
-    //         {headers: this.headers}
-    //         )
-    //         .subscribe((resp: HttpResponse<string>) => {
-    //             console.log('Password updated!');
-    //         });
-    // }
-    //
-    // createMember(name: string) {
-    //     return this.http.post(this.serverUrl + '/api/v1/members', {'name': name},
-    //         {headers: this.headers.append('X-Auth-Token', this.user.token)})
-    //         .subscribe((resp: HttpResponse<string>) => {
-    //             console.log('Member created!');
-    //
-    //             // TODO parse memberId from headers
-    //             // TODO error handling
-    //         });
-    //
-    //
-    // }
-
-
 }
